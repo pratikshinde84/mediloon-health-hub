@@ -23,7 +23,7 @@ const Dashboard = () => (
 
     <main className="flex-1">
       {/* Hero Banner */}
-      <section className="relative overflow-hidden">
+      {/* <section className="relative overflow-hidden">
         <div className="gradient-wave py-16 md:py-20 lg:py-24">
           <div className="absolute inset-0 opacity-10">
             {[...Array(6)].map((_, i) => (
@@ -52,7 +52,57 @@ const Dashboard = () => (
             </FadeUp>
           </div>
         </div>
-      </section>
+      </section> */}
+
+      {/* === DASHBOARD HERO SECTION === */}
+<section className="relative overflow-hidden bg-gradient-to-r from-[#E53935] to-[#FF7A00]">
+  {/* background pattern */}
+  <div className="absolute inset-0 opacity-20 bg-[url('/wave-pattern.png')] bg-cover bg-center pointer-events-none" />
+
+  <div className="relative max-w-7xl mx-auto px-6 py-16 lg:py-24 grid lg:grid-cols-2 gap-12 items-center">
+
+    {/* LEFT CONTENT */}
+    <div className="text-white space-y-6 animate-in fade-in slide-in-from-left-8 duration-700">
+
+      <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur px-4 py-2 rounded-full text-sm font-semibold">
+        ✨ AI-Powered Pharmacy
+      </div>
+
+      <h1 className="text-4xl md:text-4xl lg:text-5xl font-extrabold leading-tight">
+        YOUR HEALTH — OUR  
+        <span className="block">COMMITMENT</span>
+      </h1>
+
+      <p className="text-white/90 max-w-xl text-lg">
+        Trust in German pharmacy quality with fast delivery. 
+        Over 50,000 health products from medicines to dietary 
+        supplements — discreet, safe and fairly priced.
+      </p>
+
+      <div className="flex flex-wrap gap-4 pt-4">
+        <button className="bg-white text-[#E53935] px-6 py-3 rounded-xl font-bold hover:scale-105 transition-all shadow-lg">
+          🛒 Shop now
+        </button>
+
+        <button className="border border-white/40 text-white px-6 py-3 rounded-xl font-bold hover:bg-white/10 transition-all">
+          Upload Prescription
+        </button>
+      </div>
+    </div>
+
+    {/* RIGHT IMAGE */}
+    
+    <div className="relative flex justify-center lg:justify-end animate-in fade-in slide-in-from-right-8 duration-700">
+
+      <img
+        src="/doctor.png"
+        alt="Doctor"
+        className="w-full max-w-md lg:max-w-lg object-contain drop-shadow-2xl"
+      />
+
+    </div>
+  </div>
+</section>
 
       {/* Trust Bar */}
       <section className="border-b border-border bg-card">

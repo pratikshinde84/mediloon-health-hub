@@ -1,9 +1,12 @@
+/* ✅ GOOGLE FONT — MUST BE FIRST */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
+
+/* ✅ TAILWIND DIRECTIVES */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap');
-
+/* ================= BASE TOKENS ================= */
 @layer base {
   :root {
     --background: 210 33% 97%;
@@ -45,17 +48,36 @@
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 1 76% 55%;
 
-    /* Custom tokens */
-    --gradient-primary: linear-gradient(135deg, hsl(1, 76%, 55%), hsl(29, 100%, 50%));
-    --gradient-hero: linear-gradient(135deg, hsl(1, 76%, 55%) 0%, hsl(15, 90%, 52%) 50%, hsl(29, 100%, 50%) 100%);
-    --gradient-wave: linear-gradient(160deg, hsl(1, 76%, 55%) 0%, hsl(20, 95%, 55%) 40%, hsl(29, 100%, 50%) 100%);
-    --shadow-card: 0 1px 3px 0 rgba(0,0,0,0.06), 0 1px 2px -1px rgba(0,0,0,0.06);
-    --shadow-card-hover: 0 10px 25px -5px rgba(229,57,53,0.1), 0 8px 10px -6px rgba(229,57,53,0.05);
+    /* 🔥 Custom Tokens */
+    --gradient-primary: linear-gradient(
+      135deg,
+      hsl(1, 76%, 55%),
+      hsl(29, 100%, 50%)
+    );
+
+    --gradient-hero: linear-gradient(
+      135deg,
+      hsl(1, 76%, 55%) 0%,
+      hsl(15, 90%, 52%) 50%,
+      hsl(29, 100%, 50%) 100%
+    );
+
+    --gradient-wave: linear-gradient(
+      160deg,
+      hsl(1, 76%, 55%) 0%,
+      hsl(20, 95%, 55%) 40%,
+      hsl(29, 100%, 50%) 100%
+    );
+
+    --shadow-card: 0 1px 3px 0 rgba(0,0,0,0.06),
+      0 1px 2px -1px rgba(0,0,0,0.06);
+
+    --shadow-card-hover: 0 10px 25px -5px rgba(229,57,53,0.1),
+      0 8px 10px -6px rgba(229,57,53,0.05);
+
     --shadow-elevated: 0 20px 40px -12px rgba(0,0,0,0.12);
   }
-}
 
-@layer base {
   * {
     @apply border-border;
   }
@@ -66,6 +88,7 @@
   }
 }
 
+/* ================= UTILITIES ================= */
 @layer utilities {
   .gradient-primary {
     background: var(--gradient-primary);
@@ -100,6 +123,6 @@
 
   .glass {
     backdrop-filter: blur(12px);
-    background: rgba(255,255,255,0.85);
+    background: rgba(255, 255, 255, 0.85);
   }
 }

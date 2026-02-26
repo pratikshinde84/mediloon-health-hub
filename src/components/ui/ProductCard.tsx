@@ -216,12 +216,12 @@ import { ShoppingCart, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
-  id: number;
+  id: string;
   name: string;
-  brand: string;
+  brand?: string;
   price: number;
   originalPrice?: number;
-  image: string;
+  image?: string;
   aiRecommended?: boolean;
   refillSoon?: boolean;
   onAddToCart?: () => void;

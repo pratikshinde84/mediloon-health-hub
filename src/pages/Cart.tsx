@@ -8,15 +8,15 @@ import QuantityStepper from "@/components/ui/QuantityStepper";
 import { FadeUp, StaggerContainer, StaggerItem } from "@/components/animations/PageTransition";
 
 const initialItems = [
-  { id: 1, name: "Paracetamol 500mg", brand: "Cipla", price: 35, qty: 2, image: "/placeholder.svg" },
-  { id: 2, name: "Vitamin D3 Drops", brand: "HealthVit", price: 280, qty: 1, image: "/placeholder.svg" },
-  { id: 3, name: "Amoxicillin 250mg", brand: "Sun Pharma", price: 120, qty: 1, image: "/placeholder.svg" },
+  { id: "1", name: "Paracetamol 500mg", brand: "Cipla", price: 35, qty: 2, image: "/placeholder.svg" },
+  { id: "2", name: "Vitamin D3 Drops", brand: "HealthVit", price: 280, qty: 1, image: "/placeholder.svg" },
+  { id: "3", name: "Amoxicillin 250mg", brand: "Sun Pharma", price: 120, qty: 1, image: "/placeholder.svg" },
 ];
 
 const Cart = () => {
   const [items, setItems] = useState(initialItems);
-  const updateQty = (id: number, qty: number) => setItems((prev) => prev.map((it) => (it.id === id ? { ...it, qty } : it)));
-  const remove = (id: number) => setItems((prev) => prev.filter((it) => it.id !== id));
+  const updateQty = (id: string, qty: number) => setItems((prev) => prev.map((it) => (it.id === id ? { ...it, qty } : it)));
+  const remove = (id: string) => setItems((prev) => prev.filter((it) => it.id !== id));
   const subtotal = items.reduce((s, it) => s + it.price * it.qty, 0);
 
   return (

@@ -88,6 +88,26 @@ http://localhost:8080
 
 ---
 
+## 🖥️ Running the Backend API
+
+A simple Express server provides the `/medicines` endpoint on port 8000. It lives in the `server` folder and is completely separate from the frontend.
+
+1. Open a new terminal in the repository root.
+2. Change directory and install:
+   ```bash
+   cd server
+   npm install
+   ```
+3. Start the API:
+   ```bash
+   npm start
+   ```
+4. The frontend will fetch product data from `http://localhost:8000/medicines`.
+
+You can modify `server/index.js` if you want to connect to a real database later.
+
+---
+
 ## 🛒 User Flow
 
 1. Browse medicines on Dashboard

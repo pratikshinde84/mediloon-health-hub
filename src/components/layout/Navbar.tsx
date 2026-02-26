@@ -2,6 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { ShoppingCart, Search, Menu, X, User } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCart } from "@/context/CartContext";
 
 const navLinks = [
   { label: "Home", href: "/dashboard" },
@@ -13,7 +14,8 @@ const navLinks = [
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
-  const cartCount = 3;
+  const { items } = useCart();
+  const cartCount = items.length;
 
   return (
     <header className="sticky top-0 z-50 glass border-b border-border">

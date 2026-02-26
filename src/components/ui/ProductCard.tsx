@@ -214,6 +214,7 @@
 import { motion } from "framer-motion";
 import { ShoppingCart, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 interface ProductCardProps {
   id: string;
@@ -247,6 +248,16 @@ const ProductCard = ({
 
   const handleCardClick = () => {
     navigate(`/product/${id}`);
+  };
+
+  const { toast } = useToast();
+  const handleCartClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onAddToCart?.();
+    toast({
+      title: "✅ Added to cart",
+      description: `${name} added to your cart`,
+    });
   };
 
   return (
@@ -314,10 +325,7 @@ const ProductCard = ({
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
-            onClick={(e) => {
-              e.stopPropagation(); // prevent navigation
-              onAddToCart?.();
-            }}
+            onClick={handleCartClick}
             className="p-2 rounded-lg gradient-primary text-primary-foreground hover:opacity-90 transition-opacity"
           >
             <ShoppingCart className="h-4 w-4" />

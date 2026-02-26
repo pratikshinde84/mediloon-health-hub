@@ -44,6 +44,23 @@ app.get('/medicines', (req, res) => {
   res.json(medicines);
 });
 
+// simple cart storage (in-memory for demo)
+let cartItems = [];
+
+app.get('/cart', (req, res) => {
+  res.json(cartItems);
+});
+
+app.post('/cart', (req, res) => {
+  const items = req.body;
+  if (!Array.isArray(items)) {
+    return res.status(400).json({ error: 'expected array of items' });
+  }
+  // replace entire cart for simplicity
+  cartItems = items;
+  res.json({ saved: cartItems.length });
+});
+
 app.listen(port, () => {
   console.log(`Mediloon API listening on http://localhost:${port}`);
 });

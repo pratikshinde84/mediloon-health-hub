@@ -180,7 +180,7 @@ import {
   FadeUp,
 } from "@/components/animations/PageTransition";
 
-import { useCart } from "@/context/CartContext"; // ✅ IMPORTANT
+import { useCart } from "@/context/CartContext"; // ✅ IMPORTANT (provides reloadCart too)
 
 // fetch products from backend instead of using static data
 
@@ -223,7 +223,12 @@ const Dashboard = () => {
   }, []);
 
   const [aiMedicine, setAiMedicine] = useState<string | null>(null);
-  const { addToCart } = useCart(); // ✅ real cart
+  const { addToCart, reloadCart } = useCart(); // ✅ real cart
+
+  // ensure cart is loaded when user reaches dashboard
+  useEffect(() => {
+    reloadCart();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">

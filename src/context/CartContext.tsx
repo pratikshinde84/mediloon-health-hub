@@ -99,7 +99,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const res = await fetch("http://localhost:8000/cart", {
-        headers: { "user_email": userEmail },
+        headers: { "user-email": userEmail },
       });
       console.log("Cart fetch response:", res.status);
       if (res.ok) {
@@ -146,7 +146,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(userEmail && { "user_email": userEmail }),
+          ...(userEmail && { "user-email": userEmail }),
         },
         body: JSON.stringify({ medicine_id: product.id, quantity: 1 }),
       });
@@ -167,7 +167,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       const res = await fetch(`http://localhost:8000/cart/item/${id}`, {
         method: "DELETE",
         headers: {
-          ...(userEmail && { "user_email": userEmail }),
+          ...(userEmail && { "user-email": userEmail }),
         },
       });
       console.log("Remove from cart response:", res.status);
@@ -192,7 +192,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          ...(userEmail && { "user_email": userEmail }),
+          ...(userEmail && { "user-email": userEmail }),
         },
         body: JSON.stringify({ quantity: qty }),
       });

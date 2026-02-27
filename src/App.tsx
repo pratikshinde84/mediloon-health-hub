@@ -64,38 +64,58 @@ import AdminRegister from "./pages/AdminRegister";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProductDetail from "./pages/ProductDetail";
 import NotFound from "./pages/NotFound";
+import { ChatbotProvider, useChatbotContext } from "./components/chatbot/ChatbotContext";
+import { ChatbotIcon } from "./components/chatbot/ChatbotIcon";
+import { ChatSplitScreen } from "./components/chatbot/ChatSplitScreen";
 
 const queryClient = new QueryClient();
+
+function MainContent({ children }: { children: React.ReactNode }) {
+  const { isOpen } = useChatbotContext();
+  return (
+    <div className={`main-content-wrapper ${isOpen ? 'split-active' : ''}`}>
+      {children}
+    </div>
+  );
+}
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
-        <BrowserRouter>
-          <Toaster />
-          <Sonner />
+        <ChatbotProvider>
+          <BrowserRouter>
+            <Toaster />
+            <Sonner />
 
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/onboarding" element={<Onboarding />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/checkout" element={<Checkout />} />
+            <MainContent>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/onboarding" element={<Onboarding />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
 
-            {/* ✅ product detail */}
-            <Route path="/product/:id" element={<ProductDetail />} />
+                {/* ✅ product detail */}
+                <Route path="/product/:id" element={<ProductDetail />} />
 
-            {/* ✅ admin */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin/register" element={<AdminRegister />} />
-            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                {/* ✅ admin */}
+                <Route path="/admin/login" element={<AdminLogin />} />
+                <Route path="/admin/register" element={<AdminRegister />} />
+                <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
-            {/* ✅ fallback */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+                {/* ✅ fallback */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </MainContent>
+
+            {/* ✅ AI Pharmacy Chatbot - Global Component */}
+            <ChatbotIcon />
+            <ChatSplitScreen />
+          </BrowserRouter>
+        </ChatbotProvider>
       </TooltipProvider>
     </QueryClientProvider>
   );

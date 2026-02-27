@@ -49,33 +49,27 @@
     --sidebar-ring: 1 76% 55%;
 
     /* 🔥 Custom Tokens */
-    --gradient-primary: linear-gradient(
-      135deg,
-      hsl(1, 76%, 55%),
-      hsl(29, 100%, 50%)
-    );
+    --gradient-primary: linear-gradient(135deg,
+        hsl(1, 76%, 55%),
+        hsl(29, 100%, 50%));
 
-    --gradient-hero: linear-gradient(
-      135deg,
-      hsl(1, 76%, 55%) 0%,
-      hsl(15, 90%, 52%) 50%,
-      hsl(29, 100%, 50%) 100%
-    );
+    --gradient-hero: linear-gradient(135deg,
+        hsl(1, 76%, 55%) 0%,
+        hsl(15, 90%, 52%) 50%,
+        hsl(29, 100%, 50%) 100%);
 
-    --gradient-wave: linear-gradient(
-      160deg,
-      hsl(1, 76%, 55%) 0%,
-      hsl(20, 95%, 55%) 40%,
-      hsl(29, 100%, 50%) 100%
-    );
+    --gradient-wave: linear-gradient(160deg,
+        hsl(1, 76%, 55%) 0%,
+        hsl(20, 95%, 55%) 40%,
+        hsl(29, 100%, 50%) 100%);
 
-    --shadow-card: 0 1px 3px 0 rgba(0,0,0,0.06),
-      0 1px 2px -1px rgba(0,0,0,0.06);
+    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.06),
+      0 1px 2px -1px rgba(0, 0, 0, 0.06);
 
-    --shadow-card-hover: 0 10px 25px -5px rgba(229,57,53,0.1),
-      0 8px 10px -6px rgba(229,57,53,0.05);
+    --shadow-card-hover: 0 10px 25px -5px rgba(229, 57, 53, 0.1),
+      0 8px 10px -6px rgba(229, 57, 53, 0.05);
 
-    --shadow-elevated: 0 20px 40px -12px rgba(0,0,0,0.12);
+    --shadow-elevated: 0 20px 40px -12px rgba(0, 0, 0, 0.12);
   }
 
   * {
@@ -124,5 +118,92 @@
   .glass {
     backdrop-filter: blur(12px);
     background: rgba(255, 255, 255, 0.85);
+  }
+
+  /* Custom Scrollbar for Chatbot */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 10px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Split Screen Layout V3 CSS */
+  .split-screen {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 100;
+    pointer-events: none;
+    /* Let clicks pass through to main site by default */
+  }
+
+  .split-screen.is-open {
+    pointer-events: auto;
+    /* Capture clicks when open */
+  }
+
+  .left-panel {
+    width: 50vw;
+    height: 100vh;
+    transform: translateX(-100%);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: hsl(var(--background));
+    border-right: 1px solid hsl(var(--border) / 0.5);
+    z-index: 102;
+    pointer-events: auto;
+  }
+
+  .left-panel.active {
+    transform: translateX(0);
+  }
+
+  .right-panel {
+    width: 50vw;
+    height: 100vh;
+    margin-left: auto;
+    transform: translateX(100%);
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    background: hsl(var(--background));
+    border-left: 1px solid hsl(var(--border) / 0.5);
+    z-index: 101;
+    pointer-events: auto;
+  }
+
+  .right-panel.active {
+    transform: translateX(0);
+  }
+
+  /* The main site wrapper */
+  .main-content-wrapper {
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 100vw;
+    overflow-x: clip;
+  }
+
+  .main-content-wrapper.split-active {
+    width: 50vw;
   }
 }

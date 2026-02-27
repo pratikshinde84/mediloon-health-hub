@@ -8,7 +8,7 @@ const navLinks = [
   { label: "Home", href: "/dashboard" },
   { label: "Categories", href: "/dashboard" },
   { label: "AI Picks", href: "/dashboard" },
-  { label: "Orders", href: "/dashboard" },
+  { label: "Orders", href: "/orders" },
 ];
 
 const Navbar = () => {

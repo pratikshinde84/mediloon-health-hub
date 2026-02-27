@@ -1,7 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, ShoppingCart } from "lucide-react";
-import { medicines } from "@/data/medicines";
 
 interface Props {
   onMedicineFound?: (name: string) => void;
@@ -13,11 +12,42 @@ const AIChatbot = ({ onMedicineFound }: Props) => {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // medicines loaded from backend
+  const [medicines, setMedicines] = useState<any[]>([]);
+  const [medLoading, setMedLoading] = useState(true);
+  const [medError, setMedError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchMeds = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/medicines");
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+        const data = await res.json();
+        setMedicines(data);
+      } catch (err: any) {
+        console.error("failed to load medicines", err);
+        setMedError(err.message || "unknown error");
+      } finally {
+        setMedLoading(false);
+      }
+    };
+    fetchMeds();
+  }, []);
+
   // 🔥 Fake AI brain
   const fakeAIResponse = (text: string) => {
     const lower = text.toLowerCase();
 
-    if (lower.includes("paracetamol") || lower.includes("fever")) {
+    // if our medicines list failed to load, just apologise
+    if (medLoading) {
+      return { text: "Still loading products, please wait...", products: [], medicineName: null };
+    }
+    if (medError) {
+      return { text: "Sorry, I can't access product data right now.", products: [], medicineName: null };
+    }
+
+    // simplistic matching: if user mentions something we just return all medicines
+    if (lower.includes("paracetamol") || lower.includes("fever") || lower.includes("medicine")) {
       return {
         text: "I found the best match for you.",
         products: medicines,
@@ -106,7 +136,7 @@ const AIChatbot = ({ onMedicineFound }: Props) => {
                     {m.text}
                   </div>
 
-                  {/* 🔥 PRODUCT CARDS */}
+                      {/* 🔥 PRODUCT CARDS */}
                   {m.products?.length > 0 && (
                     <div className="mt-2 space-y-2">
                       {m.products.map((p: any) => (

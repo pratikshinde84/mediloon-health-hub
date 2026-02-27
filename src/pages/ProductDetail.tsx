@@ -3,37 +3,57 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { useCart } from "@/context/CartContext";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 import { useToast } from "@/hooks/use-toast";
 
-const dummyProducts = [
-  {
-    id: 1,
-    name: "Paracetamol 500mg",
-    brand: "Cipla",
-    price: 35,
-    image: "/placeholder.svg",
-    description:
-      "Paracetamol is used to treat fever and mild to moderate pain.",
-  },
-  {
-    id: 2,
-    name: "Amoxicillin 250mg",
-    brand: "Sun Pharma",
-    price: 120,
-    image: "/placeholder.svg",
-    description: "Antibiotic used for bacterial infections.",
-  },
-];
+interface Product {
+  id: string;
+  name: string;
+  brand?: string;
+  price: number;
+  image?: string;
+  description?: string;
+}
 
+// no static data any more; we'll pull details from the API
 const ProductDetail = () => {
-  const { id } = useParams();
+  const { id } = useParams<{id: string}>();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { toast } = useToast();
-  const product = dummyProducts.find((p) => p.id === Number(id));
 
-  if (!product) return <div>Product not found</div>;
+  const [product, setProduct] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!id) return;
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(`http://localhost:8000/medicines/${id}`);
+        if (res.status === 404) {
+          setError("Product not found");
+          setProduct(null);
+        } else if (!res.ok) {
+          throw new Error(`Status ${res.status}`);
+        } else {
+          const data: Product = await res.json();
+          setProduct(data);
+        }
+      } catch (err: any) {
+        console.error("failed to load product", err);
+        setError(err.message || "unknown error");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
+  if (loading) return <div className="p-10">Loading...</div>;
+  if (error) return <div className="p-10 text-red-500">{error}</div>;
+  if (!product) return <div className="p-10">Product not found</div>;
 
   const handleBuyNow = () => {
     addToCart(product);

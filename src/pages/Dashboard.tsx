@@ -1,50 +1,3 @@
-// import { motion } from "framer-motion";
-// import { Sparkles, TrendingUp, Clock, Shield, Bot } from "lucide-react";
-// import Navbar from "@/components/layout/Navbar";
-// import Footer from "@/components/layout/Footer";
-// import ProductCard from "@/components/ui/ProductCard";
-// import { useState } from "react";
-// import TypingInfo from "@/components/ai/TypingInfo";
-
-// import {
-//   StaggerContainer,
-//   StaggerItem,
-//   FadeUp,
-// } from "@/components/animations/PageTransition";
-// import AIChatbot from "@/components/ai/AIChatbot";
-
-// const products = [
-//   {
-//     name: "Paracetamol 500mg",
-//     brand: "Cipla",
-//     price: 35,
-//     originalPrice: 50,
-//     image: "/placeholder.svg",
-//     aiRecommended: true,
-//   },
-//   {
-//     name: "Amoxicillin 250mg",
-//     brand: "Sun Pharma",
-//     price: 120,
-//     originalPrice: 150,
-//     image: "/placeholder.svg",
-//     refillSoon: true,
-//   },
-//   {
-//     name: "Vitamin D3 Drops",
-//     brand: "HealthVit",
-//     price: 280,
-//     image: "/placeholder.svg",
-//     aiRecommended: true,
-//   },
-//   {
-//     name: "Cetirizine 10mg",
-//     brand: "Dr. Reddy's",
-//     price: 45,
-//     originalPrice: 65,
-//     image: "/placeholder.svg",
-//   },
-// ];
 
 // const Dashboard = () => {
 // const [aiMedicine, setAiMedicine] = useState<string | null>(null);
@@ -217,7 +170,7 @@ import { Sparkles, TrendingUp, Clock, Shield } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/ui/ProductCard";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TypingInfo from "@/components/ai/TypingInfo";
 import AIChatbot from "@/components/ai/AIChatbot";
 
@@ -227,49 +180,55 @@ import {
   FadeUp,
 } from "@/components/animations/PageTransition";
 
-import { useCart } from "@/context/CartContext"; // ✅ IMPORTANT
+import { useCart } from "@/context/CartContext"; // ✅ IMPORTANT (provides reloadCart too)
 
-// ✅ MUST HAVE ID
-const products = [
-  {
-    id: 1,
-    name: "Paracetamol 500mg",
-    brand: "Cipla",
-    price: 35,
-    originalPrice: 50,
-    image: "/placeholder.svg",
-    aiRecommended: true,
-  },
-  {
-    id: 2,
-    name: "Amoxicillin 250mg",
-    brand: "Sun Pharma",
-    price: 120,
-    originalPrice: 150,
-    image: "/placeholder.svg",
-    refillSoon: true,
-  },
-  {
-    id: 3,
-    name: "Vitamin D3 Drops",
-    brand: "HealthVit",
-    price: 280,
-    image: "/placeholder.svg",
-    aiRecommended: true,
-  },
-  {
-    id: 4,
-    name: "Cetirizine 10mg",
-    brand: "Dr. Reddy's",
-    price: 45,
-    originalPrice: 65,
-    image: "/placeholder.svg",
-  },
-];
+// fetch products from backend instead of using static data
 
+interface Product {
+  id: string; // UUID from backend
+  name: string;
+  brand?: string;
+  price: number;
+  originalPrice?: number;
+  image?: string;
+  aiRecommended?: boolean;
+  refillSoon?: boolean;
+  description?: string; // for detail view
+}
+
+// stateful collection of products, loaded from API
+// the initial value is an empty array; `useEffect` below will populate it.
 const Dashboard = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loadingProducts, setLoadingProducts] = useState(true);
+  const [productError, setProductError] = useState<string | null>(null);
+
+  // load products from local backend
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("http://localhost:8000/medicines");
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+        const data: Product[] = await res.json();
+        setProducts(data);
+      } catch (err: any) {
+        console.error("failed to load products", err);
+        setProductError(err.message || "unknown error");
+      } finally {
+        setLoadingProducts(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   const [aiMedicine, setAiMedicine] = useState<string | null>(null);
-  const { addToCart } = useCart(); // ✅ real cart
+  const { addToCart, reloadCart } = useCart(); // ✅ real cart
+
+  // ensure cart is loaded when user reaches dashboard
+  useEffect(() => {
+    reloadCart();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -364,7 +323,13 @@ const Dashboard = () => {
                       <ProductCard
                         key={product.id}
                         {...product}
-                        onAddToCart={() => addToCart(product)}
+                        onAddToCart={() => addToCart({
+                          id: product.id,
+                          name: product.name,
+                          brand: product.brand || "",
+                          price: product.price,
+                          image: product.image || "",
+                        })}
                       />
                     ))}
                 </div>
@@ -388,16 +353,28 @@ const Dashboard = () => {
             </div>
           </FadeUp>
 
-          <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {products.map((product) => (
-              <StaggerItem key={product.id}>
-                <ProductCard
-                  {...product}
-                  onAddToCart={() => addToCart(product)}
-                />
-              </StaggerItem>
-            ))}
-          </StaggerContainer>
+          {loadingProducts && <p className="text-center">Loading products…</p>}
+          {productError && <p className="text-center text-red-500">Error: {productError}</p>}
+          {!loadingProducts && !productError && (
+            <StaggerContainer className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+              {products.map((product) => (
+                <StaggerItem key={product.id}>
+                  <ProductCard
+                    {...product}
+                    onAddToCart={() =>
+                      addToCart({
+                        id: product.id,
+                        name: product.name,
+                        brand: product.brand || "",
+                        price: product.price,
+                        image: product.image || "",
+                      })
+                    }
+                  />
+                </StaggerItem>
+              ))}
+            </StaggerContainer>
+          )}
         </section>
       </main>
 

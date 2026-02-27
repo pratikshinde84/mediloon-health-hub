@@ -5,9 +5,41 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Modal from "@/components/ui/Modal";
 import { FadeUp } from "@/components/animations/PageTransition";
+import { useCart } from "@/context/CartContext";
+import { useOrders } from "@/context/OrderContext";
 
 const Checkout = () => {
   const [showSuccess, setShowSuccess] = useState(false);
+  const { items, reloadCart } = useCart();
+  const { reloadOrders } = useOrders();
+
+  const subtotal = items.reduce((s, it) => s + it.price * it.qty, 0);
+
+  const handlePay = async () => {
+    // fire off order creation
+    try {
+      const userEmail = localStorage.getItem("user_email");
+      const res = await fetch("http://localhost:8000/orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(userEmail && { "user-email": userEmail }),
+        },
+        body: JSON.stringify({
+          items: items.map((it) => ({ medicine_id: it.id, quantity: it.qty })),
+        }),
+      });
+      if (res.ok) {
+        await reloadOrders();
+        await reloadCart();
+        setShowSuccess(true);
+      } else {
+        console.warn("order creation failed", res.statusText);
+      }
+    } catch (e) {
+      console.error("failed to create order", e);
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
@@ -61,10 +93,11 @@ const Checkout = () => {
           <motion.button
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => setShowSuccess(true)}
+            onClick={handlePay}
             className="w-full h-12 rounded-xl gradient-primary text-primary-foreground font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity"
+            disabled={items.length === 0}
           >
-            Pay ₹435
+            Pay ₹{subtotal}
           </motion.button>
         </FadeUp>
       </main>

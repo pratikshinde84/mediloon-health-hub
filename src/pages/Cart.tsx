@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Trash2, ArrowRight } from "lucide-react";
@@ -6,17 +5,10 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import QuantityStepper from "@/components/ui/QuantityStepper";
 import { FadeUp, StaggerContainer, StaggerItem } from "@/components/animations/PageTransition";
-
-const initialItems = [
-  { id: 1, name: "Paracetamol 500mg", brand: "Cipla", price: 35, qty: 2, image: "/placeholder.svg" },
-  { id: 2, name: "Vitamin D3 Drops", brand: "HealthVit", price: 280, qty: 1, image: "/placeholder.svg" },
-  { id: 3, name: "Amoxicillin 250mg", brand: "Sun Pharma", price: 120, qty: 1, image: "/placeholder.svg" },
-];
+import { useCart } from "@/context/CartContext";
 
 const Cart = () => {
-  const [items, setItems] = useState(initialItems);
-  const updateQty = (id: number, qty: number) => setItems((prev) => prev.map((it) => (it.id === id ? { ...it, qty } : it)));
-  const remove = (id: number) => setItems((prev) => prev.filter((it) => it.id !== id));
+  const { items, updateQty, removeFromCart } = useCart();
   const subtotal = items.reduce((s, it) => s + it.price * it.qty, 0);
 
   return (
@@ -43,7 +35,7 @@ const Cart = () => {
                       <p className="text-sm font-bold text-foreground mt-1">₹{item.price * item.qty}</p>
                     </div>
                     <QuantityStepper value={item.qty} onChange={(v) => updateQty(item.id, v)} />
-                    <button onClick={() => remove(item.id)} className="p-2 rounded-lg hover:bg-destructive/10 transition-colors">
+                    <button onClick={() => removeFromCart(item.id)} className="p-2 rounded-lg hover:bg-destructive/10 transition-colors">
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </button>
                   </div>
